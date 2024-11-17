@@ -109,7 +109,7 @@ const Navbar = ({ onSearch }) => {
               </svg>
             </div>
             <div className="link hover:outline hover:outline-1 hover:outline-white p-2 cursor-pointer">
-              <p className="text-xs">Hello, sign in</p>
+              <p className="text-xs">Hello, Shishir</p>
               <p className="font-bold text-sm">
                 Account & Lists
                 <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={3} stroke="currentColor" className="w-4 h-4 inline ml-1">
