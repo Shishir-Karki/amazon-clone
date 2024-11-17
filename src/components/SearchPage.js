@@ -4,8 +4,8 @@ import { addToCart } from '../utils/cartSlice';
 import { cartItem } from '../data/cartItem';
 
 const FilterSection = ({ title, options, selectedOptions, onOptionChange }) => (
-  <div className="mb-6">
-    <h3 className="text-lg font-bold mb-2">{title}</h3>
+  <div className="mb-4 md:mb-6">
+    <h3 className="text-base md:text-lg font-bold mb-2">{title}</h3>
     <div className="space-y-2">
       {options.map((option) => (
         <label key={option} className="flex items-center space-x-2">
@@ -27,6 +27,7 @@ function SearchPage({ searchQuery }) {
   const [selectedCategories, setSelectedCategories] = useState([]);
   const [selectedRatings, setSelectedRatings] = useState([]);
   const [selectedPriceRanges, setSelectedPriceRanges] = useState([]);
+  const [isFilterVisible, setIsFilterVisible] = useState(false);
 
   const handleAddToCart = (item) => {
     dispatch(addToCart(item));
@@ -39,45 +40,31 @@ function SearchPage({ searchQuery }) {
   const isPriceInRange = (price, range) => {
     const numericPrice = parsePriceString(price);
     switch (range) {
-      case 'Under ₹1,000':
-        return numericPrice < 1000;
-      case '₹1,000 - ₹5,000':
-        return numericPrice >= 1000 && numericPrice <= 5000;
-      case '₹5,000 - ₹10,000':
-        return numericPrice >= 5000 && numericPrice <= 10000;
-      case 'Over ₹10,000':
-        return numericPrice > 10000;
-      default:
-        return false;
+      case 'Under ₹1,000': return numericPrice < 1000;
+      case '₹1,000 - ₹5,000': return numericPrice >= 1000 && numericPrice <= 5000;
+      case '₹5,000 - ₹10,000': return numericPrice >= 5000 && numericPrice <= 10000;
+      case 'Over ₹10,000': return numericPrice > 10000;
+      default: return false;
     }
   };
 
   const filteredProducts = useMemo(() => {
     const query = searchQuery?.toLowerCase() || '';
-    
     return cartItem.filter((item) => {
-      const matchesSearch = 
-        item.product_name.toLowerCase().includes(query) ||
+      const matchesSearch = item.product_name.toLowerCase().includes(query) ||
         item.category?.toLowerCase().includes(query);
-
-      const matchesCategory = 
-        selectedCategories.length === 0 ||
+      const matchesCategory = selectedCategories.length === 0 ||
         selectedCategories.some(category => 
           item.category?.toLowerCase().includes(category.toLowerCase())
         );
-
-      const matchesRating = 
-        selectedRatings.length === 0 ||
+      const matchesRating = selectedRatings.length === 0 ||
         selectedRatings.some(rating => 
           Math.floor(item.rating) >= parseInt(rating)
         );
-
-      const matchesPrice = 
-        selectedPriceRanges.length === 0 ||
+      const matchesPrice = selectedPriceRanges.length === 0 ||
         selectedPriceRanges.some(range => 
           isPriceInRange(item.discounted_price, range)
         );
-
       return matchesSearch && matchesCategory && matchesRating && matchesPrice;
     });
   }, [searchQuery, selectedCategories, selectedRatings, selectedPriceRanges]);
@@ -85,16 +72,7 @@ function SearchPage({ searchQuery }) {
   const filterSections = [
     {
       title: "Department",
-      options: [
-        "Electronics",
-        "Home & Kitchen",
-        "Fashion",
-        "Books",
-        "Beauty",
-        "Toys & Games",
-        "Sports & Fitness",
-        "Automotive"
-      ],
+      options: ["Electronics", "Home & Kitchen", "Fashion", "Books", "Beauty", "Toys & Games", "Sports & Fitness", "Automotive"],
       selected: selectedCategories,
       onChange: setSelectedCategories
     },
@@ -106,23 +84,37 @@ function SearchPage({ searchQuery }) {
     },
     {
       title: "Price",
-      options: [
-        "Under ₹1,000",
-        "₹1,000 - ₹5,000",
-        "₹5,000 - ₹10,000",
-        "Over ₹10,000"
-      ],
+      options: ["Under ₹1,000", "₹1,000 - ₹5,000", "₹5,000 - ₹10,000", "Over ₹10,000"],
       selected: selectedPriceRanges,
       onChange: setSelectedPriceRanges
     }
   ];
 
   return (
-    <div className="max-w-screen-2xl mx-auto px-4 py-6">
-      <div className="flex gap-6">
-        <div className="w-64 flex-shrink-0">
+    <div className="max-w-screen-2xl mx-auto px-4 py-4 md:py-6">
+      {/* Mobile Filter Button */}
+      <button
+        className="md:hidden w-full mb-4 bg-white p-3 rounded-lg shadow flex items-center justify-center space-x-2"
+        onClick={() => setIsFilterVisible(!isFilterVisible)}
+      >
+        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-5 h-5">
+          <path strokeLinecap="round" strokeLinejoin="round" d="M12 3c2.755 0 5.455.232 8.083.678.533.09.917.556.917 1.096v1.044a2.25 2.25 0 0 1-.659 1.591l-5.432 5.432a2.25 2.25 0 0 0-.659 1.591v2.927a2.25 2.25 0 0 1-1.244 2.013L9.75 21v-6.568a2.25 2.25 0 0 0-.659-1.591L3.659 7.409A2.25 2.25 0 0 1 3 5.818V4.774c0-.54.384-1.006.917-1.096A48.32 48.32 0 0 1 12 3Z" />
+        </svg>
+        <span>Filter Products</span>
+      </button>
+
+      <div className="flex flex-col md:flex-row gap-4">
+        {/* Filters Sidebar */}
+        <div className={`${isFilterVisible ? 'block' : 'hidden'} md:block w-full md:w-64 flex-shrink-0`}>
           <div className="bg-white p-4 rounded-lg shadow">
-            <h2 className="text-xl font-bold mb-4">Filters</h2>
+            <div className="flex justify-between items-center md:hidden mb-4">
+              <h2 className="text-xl font-bold">Filters</h2>
+              <button onClick={() => setIsFilterVisible(false)}>
+                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-6 h-6">
+                  <path strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12" />
+                </svg>
+              </button>
+            </div>
             {filterSections.map((section, index) => (
               <FilterSection
                 key={index}
@@ -141,6 +133,7 @@ function SearchPage({ searchQuery }) {
           </div>
         </div>
 
+        {/* Product List */}
         <div className="flex-grow">
           <h1 className="text-xl font-bold mb-4">
             {searchQuery ? `Results for "${searchQuery}"` : 'All Products'}
@@ -151,8 +144,8 @@ function SearchPage({ searchQuery }) {
 
           <div className="space-y-4">
             {filteredProducts.map((item) => (
-              <div key={item.product_id} className="bg-white p-4 rounded-lg shadow flex">
-                <div className="w-48 h-48 flex-shrink-0">
+              <div key={item.product_id} className="bg-white p-4 rounded-lg shadow flex flex-col sm:flex-row">
+                <div className="w-full sm:w-48 h-48 flex-shrink-0 mb-4 sm:mb-0">
                   <img
                     src={item.img_link || 'https://via.placeholder.com/200'}
                     alt={item.product_name}
@@ -160,7 +153,7 @@ function SearchPage({ searchQuery }) {
                   />
                 </div>
 
-                <div className="ml-6 flex-grow">
+                <div className="sm:ml-6 flex-grow">
                   <h3 className="text-lg font-medium hover:text-[#C7511F] cursor-pointer">
                     {item.product_name}
                   </h3>

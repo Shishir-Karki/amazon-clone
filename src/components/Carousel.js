@@ -9,7 +9,7 @@ function SampleNextArrow(props) {
   return (
     <button
       onClick={onClick}
-      className="absolute right-0 top-0 z-20 h-full w-[60px] cursor-pointer bg-gradient-to-l from-gray-100/30 to-transparent hover:from-gray-100/50 hidden md:flex items-center justify-center"
+      className="absolute right-0 top-0 z-20 h-full w-[40px] sm:w-[60px] cursor-pointer bg-gradient-to-l from-gray-100/30 to-transparent hover:from-gray-100/50 hidden sm:flex items-center justify-center"
     >
       <svg
         xmlns="http://www.w3.org/2000/svg"
@@ -17,7 +17,7 @@ function SampleNextArrow(props) {
         viewBox="0 0 24 24"
         strokeWidth={3}
         stroke="currentColor"
-        className="w-6 h-6 text-gray-700"
+        className="w-4 h-4 sm:w-6 sm:h-6 text-gray-700"
       >
         <path
           strokeLinecap="round"
@@ -34,7 +34,7 @@ function SamplePrevArrow(props) {
   return (
     <button
       onClick={onClick}
-      className="absolute left-0 top-0 z-20 h-full w-[60px] cursor-pointer bg-gradient-to-r from-gray-100/30 to-transparent hover:from-gray-100/50 hidden md:flex items-center justify-center"
+      className="absolute left-0 top-0 z-20 h-full w-[40px] sm:w-[60px] cursor-pointer bg-gradient-to-r from-gray-100/30 to-transparent hover:from-gray-100/50 hidden sm:flex items-center justify-center"
     >
       <svg
         xmlns="http://www.w3.org/2000/svg"
@@ -42,7 +42,7 @@ function SamplePrevArrow(props) {
         viewBox="0 0 24 24"
         strokeWidth={3}
         stroke="currentColor"
-        className="w-6 h-6 text-gray-700"
+        className="w-4 h-4 sm:w-6 sm:h-6 text-gray-700"
       >
         <path
           strokeLinecap="round"
@@ -56,7 +56,8 @@ function SamplePrevArrow(props) {
 
 function Carousel() {
   const settings = {
-    dots: false,
+    dots: true,
+    dotsClass: "slick-dots slick-thumb",
     infinite: true,
     speed: 500,
     slidesToShow: 1,
@@ -67,24 +68,35 @@ function Carousel() {
     nextArrow: <SampleNextArrow />,
     prevArrow: <SamplePrevArrow />,
     fade: true,
+    responsive: [
+      {
+        breakpoint: 640,
+        settings: {
+          arrows: false,
+          dots: true
+        }
+      }
+    ]
   };
 
   return (
-    <div className="relative">
+    <div className="relative w-full">
+      <div className="absolute inset-0 bg-gradient-to-b from-[#131921] to-transparent h-16 z-10" />
       <Slider {...settings}>
         {carouselData.map((item, index) => (
-          <div key={index}>
-            <div className="relative">
+          <div key={index} className="relative">
+            <div className="relative aspect-[3/2] sm:aspect-[2.5/1] md:aspect-[3/1] lg:aspect-[3.5/1]">
               <img
                 src={item.image}
                 alt={item.alt}
-                className="w-full h-[200px] sm:h-[300px] md:h-[400px] lg:h-[600px] object-cover"
+                className="w-full h-full object-cover"
               />
               <div className="absolute inset-0 bg-gradient-to-b from-transparent via-transparent to-gray-100" />
             </div>
           </div>
         ))}
       </Slider>
+      <div className="absolute bottom-0 left-0 right-0 h-20 bg-gradient-to-t from-gray-100 to-transparent" />
     </div>
   );
 }
