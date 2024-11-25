@@ -1,4 +1,6 @@
 import React, { useMemo, useState } from 'react';
+import { Link } from 'react-router-dom';
+
 import { useDispatch } from 'react-redux';
 import { addToCart } from '../utils/cartSlice';
 import { cartItem } from '../data/cartItem';
@@ -154,9 +156,11 @@ function SearchPage({ searchQuery }) {
                 </div>
 
                 <div className="sm:ml-6 flex-grow">
-                  <h3 className="text-lg font-medium hover:text-[#C7511F] cursor-pointer">
-                    {item.product_name}
-                  </h3>
+                <Link to={`/product/${item.product_id}`}>
+  <h3 className="text-lg font-medium hover:text-[#C7511F]">
+    {item.product_name}
+  </h3>
+</Link>
                   
                   <div className="flex items-center mt-2">
                     <span className="text-[#F3A847] text-sm">{'★'.repeat(Math.floor(item.rating))}</span>

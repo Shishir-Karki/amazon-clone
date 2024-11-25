@@ -4,6 +4,7 @@ import { onAuthStateChanged } from 'firebase/auth';
 import { useDispatch, useSelector } from 'react-redux';
 import { auth } from './utils/firebase';
 import { setUser, clearUser } from './utils/authSlice';
+
 import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
 import Navbar from './components/Navbar';
@@ -14,6 +15,8 @@ import Footer from './components/Footer';
 import SearchPage from './components/SearchPage';
 import Login from './components/Login';
 import Signup from './components/Signup';
+import ProductDetail from './components/ProductDetail';
+
 import './App.css';
 
 const ProtectedRoute = ({ children }) => {
@@ -107,6 +110,14 @@ function App() {
               </ProtectedRoute>
             }
           />
+          <Route
+  path="/product/:id"
+  element={
+    <ProtectedRoute>
+      <ProductDetail />
+    </ProtectedRoute>
+  }
+/>
 
           {/* Fallback Route */}
           <Route path="*" element={<Navigate to="/" />} />

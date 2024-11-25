@@ -3,6 +3,8 @@ import { useDispatch } from 'react-redux';
 import { addToCart } from '../utils/cartSlice';
 import { productData } from '../data/productData';
 import { cartItem } from '../data/cartItem';
+import { Link } from 'react-router-dom';
+
 
 function ProductSection() {
   const dispatch = useDispatch();
@@ -52,9 +54,11 @@ function ProductSection() {
                   />
                 </div>
                 <div className="space-y-2">
-                  <h3 className="text-sm line-clamp-2 hover:text-[#C7511F] cursor-pointer">
-                    {item.product_name}
-                  </h3>
+                <Link to={`/product/${item.product_id}`}>
+  <h3 className="text-lg font-medium hover:text-[#C7511F]">
+    {item.product_name}
+  </h3>
+</Link>
                   <div className="flex items-center">
                     <span className="text-sm text-yellow-500">★</span>
                     <span className="text-sm ml-1">{item.rating}</span>
